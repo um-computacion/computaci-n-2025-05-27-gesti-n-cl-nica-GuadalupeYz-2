@@ -1,0 +1,108 @@
+DOCUMENTACIÓN DEL SISTEMA DE GESTIÓN PARA CLÍNICA
+
+ Alumno: Guadalupe Yañez
+ Ciclo Lectivo: 2025
+ Carrera: Ingeniería en Informática
+
+
+1. EJECUTAR SISTEMA
+
+
+Para iniciar la aplicación de consola (CLI), ubicarse en la carpeta raíz del proyecto y ejecutar:
+
+    python3 -m codigo.cli
+
+Esto abrirá un menú interactivo por consola con las siguientes opciones:
+
+    --- Menú Clínica ---
+    1) Agregar paciente
+    2) Agregar médico
+    3) Agendar turno
+    4) Agregar especialidad a médico
+    5) Emitir receta
+    6) Ver historia clínica
+    7) Ver todos los turnos
+    8) Ver todos los pacientes
+    9) Ver todos los médicos
+    0) Salir
+
+La navegación se realiza seleccionando el número de opción correspondiente y siguiendo las instrucciones por pantalla.
+
+
+2. EJECUTAR LOS TESTS 
+
+
+Los tests se encuentran en la carpeta `/tests`.
+
+Para ejecutar todos los tests:
+
+    python3 -m unittest discover -s tests -p "test_*.py"
+
+Para ejecutar test unitarios; por ejemplo test_paciente
+Desde la carpeta raíz del proyecto:
+
+    python3 -m unittest tests.test_paciente
+
+Este comando ejecuta solamente el archivo de prueba 
+test_paciente.py ubicado en la carpeta tests/.
+
+Todos los tests están escritos con el módulo `unittest` de Python e incluyen:
+- Casos correctos de uso
+- Manejo de errores y excepciones
+- Validaciones de lógica y flujo
+
+
+3. EXPLICACIÓN DEL DISEÑO GENERAL
+
+
+ MODELO (carpeta /codigo):
+
+Contiene todas las clases del dominio, con validaciones estrictas y encapsulamiento:
+
+- `Paciente`: almacena nombre, DNI y fecha de nacimiento.
+- `Medico`: guarda nombre, matrícula y especialidades.
+- `Especialidad`: representa una especialidad médica y sus días de atención.
+- `Turno`: vincula paciente, médico, fecha y especialidad. No permite turnos en fechas pasadas.
+- `Receta`: almacena medicamentos, paciente, médico y fecha automática.
+- `HistoriaClinica`: agrupa los turnos y recetas de un paciente.
+- `Clinica`: clase principal que administra pacientes, médicos, turnos y recetas.
+- `Excepciones`: clases para manejar errores específicos del dominio.
+
+ CLI (Interfaz de consola):
+
+- Implementada en `cli.py`.
+- Presenta un menú interactivo con opciones numeradas.
+- Solicita datos al usuario y llama a métodos del modelo.
+- No contiene lógica de negocio.
+- Usa `try-except` para capturar excepciones y mostrar mensajes claros.
+
+ Pruebas (carpeta /tests):
+
+- Tests separados por clase.
+- Validan tanto comportamiento esperado como errores.
+- Cobertura completa de todas las funcionalidades principales.
+
+ Validaciones:
+
+- Todas las validaciones se hacen dentro del modelo (no en la CLI).
+- Incluyen:
+  - Campos obligatorios (nombre, DNI, matrícula, especialidad, medicamentos, etc.)
+  - Prevención de duplicados (por DNI o matrícula)
+  - Formato correcto de fechas y días de atención
+  - Turnos no válidos en fechas pasadas
+  - Disponibilidad de médico y especialidad según día
+  - Los objetos se validan al instanciarse, y lanzan excepciones si hay errores
+
+ Manejo de errores:
+
+Se utilizan excepciones personalizadas para representar errores del sistema, lanzadas desde el modelo (`Clinica`) y capturadas en la CLI:
+
+- `PacienteNoEncontradoException`
+- `MedicoNoDisponibleException`  (se usa también para matrícula inexistente)
+- `TurnoOcupadoException`
+- `RecetaInvalidaException`
+- `DatosInvalidosException`
+
+ El sistema cumple con todos los requisitos funcionales y técnicos especificados en la consigna oficial.
+
+
